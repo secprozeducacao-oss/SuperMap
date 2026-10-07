@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SuperMapa</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Archivo:wght@700;800&family=Fira+Code:wght@500;700&display=swap">
+</head>
+<body>
+
+<div id="app">
+
+  <div id="devSplash">
+    <div class="splash-header">
+      <span>SuperMap v0.8-dev</span>
+      <span>Projeto de Programacao</span>
+    </div>
+    <div class="splash-content">
+      <div class="logo-dev">
+        <svg width="55" height="55" viewBox="0 0 100 100" fill="none">
+          <rect width="100" height="100" rx="20" fill="#0d1117"/>
+          <path d="M20 30H80L70 65H30L20 30Z" stroke="#238636" stroke-width="6" fill="none"/>
+          <circle cx="35" cy="75" r="6" fill="#3fb950"/>
+          <circle cx="65" cy="75" r="6" fill="#3fb950"/>
+          <path d="M50 20C40 20 32 28 32 38C32 50 50 62 50 62C50 62 68 50 68 38C68 28 60 20 50 20Z" fill="#ef6a5e"/>
+          <circle cx="50" cy="35" r="5" fill="#0d1117"/>
+        </svg>
+      </div>
+      <div class="dev-logs" id="devLogs">
+        <span>> Carregando o sistema...</span>
+      </div>
+    </div>
+    <div class="splash-footer">
+      Trabalho de Faculdade
+    </div>
+  </div>
+
+  <section class="view on" id="home">
+    <header class="topo">
+      <div>
+        <h1>SuperMapa</h1>
+        <p>Mercados perto de você</p>
+      </div>
+      <button class="btn" onclick="navegarPara('conf')">⚙️ Ajustes</button>
+    </header>
+
+    <div class="filtros">
+      <span>Filtrar por (nota 4+):</span>
+      <button class="btn" id="btnFiltroV" onclick="filtrar('velocidade')">⚡ Velocidade</button>
+      <button class="btn" id="btnFiltroP" onclick="filtrar('preco')">💰 Preço</button>
+      <button class="btn" id="btnFiltroA" onclick="filtrar('variedade')">🛍️ Variedade</button>
+    </div>
+
+    <div class="cidade">
+      <svg id="cidade" viewBox="0 0 360 400" preserveAspectRatio="xMidYMid slice"></svg>
+      <div id="tip"></div>
+    </div>
+
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section class="view" id="attr">
+    <div class="hero" id="hero">
+      <button class="btn" onclick="navegarPara('home')">🏠 Voltar</button>
+      <div class="hero-overlay"></div>
+    </div>
+    <div class="det">
+      <h2 id="aNome"></h2>
+      <div class="end" id="aEnd"></div>
+      <div class="nota"><span>🛍️ Variedade</span><span id="sA"></span></div>
+      <div class="nota"><span>💰 Preços</span><span id="sP"></span></div>
+      <div class="nota"><span>⚡ Velocidade</span><span id="sV"></span></div>
+      <div class="acoes">
+        <a class="btn" id="aRota" target="_blank">🗺️ Rota externa</a>
+        <button class="btn p" onclick="navegarPara('mapa')">🛒 Mapa interno</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="mapa">
+    <div class="cab">
+      <button class="btn" onclick="navegarPara('attr')">🏠</button>
+      <div>
+        <h3 id="mNome"></h3>
+        <small id="mInfo"></small>
+      </div>
+    </div>
+    <div class="plan">
+      <svg id="planta" viewBox="0 0 360 520"></svg>
+    </div>
+  </section>
+
+  <section class="view" id="pesq">
+    <div class="pg">
+      <h2>🔎 Pesquisar</h2>
+      <label style="font-size:.9rem">Produto ou categoria</label>
+      <input type="text" id="q" oninput="realizarBusca()" placeholder="Ex.: alho, leite, arroz..." style="width:100%">
+      <ul id="res"></ul>
+      <div class="cats" id="cats"></div>
+    </div>
+  </section>
+
+  <section class="view" id="conf">
+    <div class="pg">
+      <button class="btn" onclick="voltarConfiguracao()">🏠 Voltar</button>
+      <h2 style="margin-top:1rem">♿ Acessibilidade</h2>
+      <div>Tamanho do texto</div>
+      <div class="tam">
+        <button class="btn" onclick="mudarTamanho(1)">A</button>
+        <button class="btn" onclick="mudarTamanho(1.25)" style="font-size:1.15em">A+</button>
+        <button class="btn" onclick="mudarTamanho(1.5)" style="font-size:1.3em">A++</button>
+      </div>
+      <label class="sw">Alto contraste <input type="checkbox" id="alto" onchange="mudarAltoContraste()"></label>
+      <label class="sw">Reduzir animações <input type="checkbox" id="mov" onchange="mudarMovimento()"></label>
+      <h2 style="margin-top:1.2rem">🔔 Notificações</h2>
+      <label class="sw">Avisos de promoções <input type="checkbox" checked></label>
+      <label class="sw">Avisar quando a fila estiver curta <input type="checkbox"></label>
+    </div>
+  </section>
+
+  <section class="view" id="ia">
+    <div class="pg" style="padding-bottom:.2rem">
+      <h2>🤖 Assistente de receitas</h2>
+    </div>
+    <div id="chat"></div>
+    <div class="sug">
+      <button class="btn" onclick="enviarMensagemChat('Quero fazer um vinagrete')">Vinagrete</button>
+      <button class="btn" onclick="enviarMensagemChat('Lasanha')">Lasanha</button>
+      <button class="btn" onclick="enviarMensagemChat('Panqueca')">Panqueca</button>
+      <button class="btn" onclick="enviarMensagemChat('Feijoada')">Feijoada</button>
+    </div>
+    <form class="lin" id="chatForm" onsubmit="enviarChatForm(event)" style="padding:.4rem 1rem .8rem">
+      <input type="text" id="msgIn" placeholder="Digite sua mensagem...">
+      <button class="btn p" type="submit">Enviar</button>
+    </form>
+  </section>
+
+  <div id="lista">
+    <div class="lh">
+      <h3>📝 Lista</h3>
+      <button class="btn" onclick="fecharLista()">❌</button>
+    </div>
+    <div class="prog"><i id="prog"></i></div>
+    <div class="lh">
+      <small id="cont" style="color:var(--mut)"></small>
+      <button class="btn" onclick="limparLista()" style="min-height: 2rem; padding: 0.2rem 0.5rem; font-size: 0.8rem">🗑️ Limpar</button>
+    </div>
+    <div id="itens"></div>
+    <div class="lin">
+      <input type="text" id="novo" placeholder="Adicionar produto">
+      <button class="btn p" onclick="adicionarNovoItem()">+</button>
+    </div>
+    <div class="lin">
+      <button class="btn" style="flex:1" onclick="mudarItemSelecionado(-1)">⬅️ Anterior</button>
+      <button class="btn" style="flex:1" onclick="mudarItemSelecionado(1)">Próximo ➡️</button>
+    </div>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button onclick="abrirAbaLista()">📝 Lista</button>
+    <button onclick="navegarPara('pesq')">🔎 Buscar</button>
+    <button onclick="navegarPara('mapa')">🛒 Mapa</button>
+    <button onclick="navegarPara('ia')">🤖 IA</button>
+  </nav>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
